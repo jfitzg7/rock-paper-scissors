@@ -5,6 +5,7 @@ function computerPlay() {
   return choices[Math.floor(Math.random() * 3)];
 }
 
+// The isWin function expects both of its parameters to be converted to lowercase
 function isWin(selection1, selection2) {
   // if selection1 loses OR TIES to selection2 then false will be returned
   if (
@@ -28,28 +29,6 @@ function didTheComputerWin(playerSelection, computerSelection) {
 }
 
 function playRound(playerSelection, computerSelection) {
-  if (
-    typeof playerSelection === "string" ||
-    playerSelection instanceof String
-  ) {
-    playerSelection = playerSelection.toLowerCase();
-  }
-
-  if (
-    typeof computerSelection === "string" ||
-    computerSelection instanceof String
-  ) {
-    computerSelection = computerSelection.toLowerCase();
-  }
-
-  const validChoices = ["rock", "paper", "scissors"];
-  if (
-    !validChoices.includes(playerSelection) ||
-    !validChoices.includes(computerSelection)
-  ) {
-    return null;
-  }
-
   let decisionStr = null;
 
   playerWinState = didThePlayerWin(playerSelection, computerSelection);
@@ -61,10 +40,59 @@ function playRound(playerSelection, computerSelection) {
     decisionStr =
       "You lose! " + computerSelection + " beats " + playerSelection;
   } else if (!playerWinState && !computerWinState) {
-    decisionStr = "Tie game! " + playerSelection + " ties " + computerSelection;
+    decisionStr =
+      "Tie round! " + playerSelection + " ties " + computerSelection;
   }
 
   return decisionStr;
 }
 
-function game() {}
+function game() {
+  let playerWinTotal = 0;
+  let computerWinTotal = 0;
+
+  for (let i = 0; i < 5; i++) {
+    let playerSelection = prompt("Type 'rock', 'paper', or 'scissors'");
+    let computerSelection = computerPlay();
+
+    // input sanitization is done here for the isWin function
+    if (
+      typeof playerSelection === "string" ||
+      playerSelection instanceof String
+    ) {
+      playerSelection = playerSelection.toLowerCase();
+    }
+
+    if (
+      typeof computerSelection === "string" ||
+      computerSelection instanceof String
+    ) {
+      computerSelection = computerSelection.toLowerCase();
+    }
+
+    const validChoices = ["rock", "paper", "scissors"];
+    if (
+      !validChoices.includes(playerSelection) ||
+      !validChoices.includes(computerSelection)
+    ) {
+      console.log(
+        "Error: playerSelection and/or computerSelection are not valid choices"
+      );
+    } else {
+      if (didThePlayerWin(playerSelection, computerSelection)) {
+        playerWinTotal++;
+      } else if (didTheComputerWin(playerSelection, computerSelection)) {
+        computerWinTotal++;
+      }
+      console.log(playRound(playerSelection, computerSelection));
+    }
+  }
+
+  if (playerWinTotal > computerWinTotal) {
+    console.log("You won the game!");
+  } else if (playerWinTotal < computerWinTotal) {
+    console.log("You lost the game!");
+  } else {
+    console.log("Tie game!");
+  }
+}
