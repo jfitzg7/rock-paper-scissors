@@ -52,10 +52,41 @@ function generateDecisionString(playerSelection, computerSelection) {
   return decisionString;
 }
 
+let playerTotalScore = 0;
+let computerTotalScore = 0;
+
 const playerButtons = document.querySelectorAll(".player-btn");
+
 playerButtons.forEach((button) => {
-  console.log(button.id);
   button.addEventListener("click", function (e) {
-    console.log(e);
+    const playerSelection = button.id;
+    const computerSelection = computerPlay().toLowerCase();
+    const playerScore = document.querySelector(".player-score");
+    const computerScore = document.querySelector(".computer-score");
+    const roundResults = document.querySelector(".round-results");
+    const gameResults = document.querySelector(".game-results");
+
+    if (playerTotalScore < 5 && computerTotalScore < 5) {
+      if (isWin(playerSelection, computerSelection)) {
+        playerTotalScore++;
+        playerScore.textContent = `Player Score: ${playerTotalScore}`;
+      } else if (isWin(computerSelection, playerSelection)) {
+        computerTotalScore++;
+        computerScore.textContent = `Computer Score: ${computerTotalScore}`;
+      }
+
+      roundResults.textContent = generateDecisionString(
+        playerSelection,
+        computerSelection
+      );
+    }
+
+    if (playerTotalScore === 5) {
+      gameResults.textContent =
+        "You won the game! Please reload the page to play again";
+    } else if (computerTotalScore === 5) {
+      gameResults.textContent =
+        "The computer won the game! Please reload the page to play again";
+    }
   });
 });
